@@ -28,11 +28,9 @@
     <div class="container">
         <h1>Examen B1 Completo</h1>
         
-        <!-- Parte 1 -->
         <h2>Parte 1: Gramática</h2>
         <div id="part1-container"></div>
 
-        <!-- Parte 2 -->
         <h2>Parte 2: Comprensión Lectora</h2>
         <div class="passage">
             <p><strong>Read the passage below and decide if the statements are True, False, or Not Given.</strong></p>
@@ -40,27 +38,17 @@
         </div>
         <div id="part2-container"></div>
 
-        <!-- Parte 3 -->
-        <h2>Parte 3: Comprensión y Respuesta</h2>
+        <h2>Parte 3: Información Personal</h2>
         <div id="part3-container"></div>
 
-        <!-- Parte 4 -->
         <h2>Parte 4: Reported Speech</h2>
         <div id="part4-container"></div>
 
-        <!-- Contenedor del Puntaje -->
         <div id="score-container"></div>
     </div>
     <script>
         let score = 0;
-        const totalQuestions = 19; // 9 + 6 + 5 no, 19 total questions
-        // Let's count properly: 
-        // Part 1: 9 questions
-        // Part 2: 6 questions
-        // Part 3: 5 questions
-        // Part 4: 5 questions
-        // Total = 9 + 6 + 5 + 5 = 25 questions.
-        const actualTotal = 25;
+        const totalForScore = 35; 
         let answeredCount = 0;
 
         const part1Questions = [
@@ -82,7 +70,7 @@
             { "question": "'I didn't steal the money,' he said.", "options": ["He denied stealing the money.", "He denied to steal the money.", "He denied that he steal the money."], "answer": "He denied stealing the money.", "explanation": "The reporting verb 'deny' is followed by the gerund form." },
             { "question": "'Why don't we go to the movies?' she suggested.", "options": ["She suggested going to the movies.", "She suggested to go to the movies.", "She suggested that we to go to the movies."], "answer": "She suggested going to the movies.", "explanation": "The reporting verb 'suggest' is followed by the gerund." },
             { "question": "'It is better to see the doctor,' he explained.", "options": ["He explained that it was better to see the doctor.", "He explained that it has been better to see the doctor.", "He explained that it is better to see the doctor."], "answer": "He explained that it was better to see the doctor.", "explanation": "The tense backshifts from 'is' to 'was' in reported speech." },
-            { "question": "'How did you feel?' she asked.", "options": ["She asked how I felt.", "She asked how did I feel.", "She asked how I had felt."], "answer": "She asked how I felt.", "explanation": "Reported questions use statement word order, and 'did' is omitted." }
+            { "question": "'How did you feel?' she asked.", "options": ["She asked how I felt.", "She asked how did I feel.", "She asked how I had felt."], "answer": "She asked how I had felt.", "explanation": "The tense shifts back to the past perfect, and 'did' is omitted." }
         ];
 
         const part2Questions = [
@@ -95,11 +83,11 @@
         ];
 
         const part3Questions = [
-            { "question": "Does the passage say that physical stores will disappear completely?", "options": ["Yes", "No", "Not Given"], "answer": "No", "explanation": "The passage states that physical stores must adapt to survive, not that they will disappear." },
-            { "question": "According to the passage, is online shopping convenient?", "options": ["Yes", "No", "Not Given"], "answer": "Yes", "explanation": "The passage mentions that consumers appreciate the convenience of online shopping." },
-            { "question": "Does the passage mention the impact of online shopping on delivery drivers?", "options": ["Yes", "No", "Not Given"], "answer": "No", "explanation": "The passage does not mention delivery drivers." },
-            { "question": "What forces physical stores to change?", "options": ["To survive by adapting to changing consumer behaviors.", "They are forced by the government.", "They want to expand globally."], "answer": "To survive by adapting to changing consumer behaviors.", "explanation": "The passage explicitly says stores must adapt to changing consumer behaviors to survive." },
-            { "question": "How long has online shopping been a dominant force?", "options": ["Over the last decade.", "For twenty years.", "Only for the last two years."], "answer": "Over the last decade.", "explanation": "The passage states that online shopping has become dominant over the last decade." }
+            { "question": "What do you like doing in your free time?", "model": "I like listening to music and playing sports." },
+            { "question": "Tell me about your daily routine on weekdays.", "model": "I usually get up at 7 o'clock, go to work, and study English in the evening." },
+            { "question": "What are your future educational or career plans?", "model": "I plan to finish my studies and find a better job." },
+            { "question": "What is the most interesting place you have visited?", "model": "The most interesting place I have visited is the beach in my country." },
+            { "question": "Do you prefer indoor or outdoor activities, and why?", "model": "I prefer outdoor activities because I like the fresh air and exercising." }
         ];
 
         const part4Sentences = [
@@ -112,9 +100,9 @@
 
         function updateScore() {
             answeredCount++;
-            if (answeredCount === actualTotal) {
+            if (answeredCount === totalForScore) {
                 const scoreContainer = document.getElementById('score-container');
-                scoreContainer.innerHTML = `Tu puntaje final es: ${score} / ${actualTotal}`;
+                scoreContainer.innerHTML = `Tu puntaje final es: ${score} / ${totalForScore}`;
             }
         }
 
@@ -168,6 +156,41 @@
             });
         }
 
+        function createPersonalQuestions(containerId, questions) {
+            const container = document.getElementById(containerId);
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    <input type="text" id="${containerId}-input-${index}" placeholder="Escribe tu respuesta aquí...">
+                    <button class="check-btn" onclick="checkPersonalAnswer('${containerId}', ${index})">Evaluar</button>
+                    <div id="${containerId}-explanation-${index}" class="explanation"></div>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function checkPersonalAnswer(containerId, index) {
+            const input = document.getElementById(`${containerId}-input-${index}`);
+            const explanationDiv = document.getElementById(`${containerId}-explanation-${index}`);
+            const userAnswer = input.value.trim();
+
+            explanationDiv.style.display = 'block';
+
+            if (userAnswer.length > 0) {
+                explanationDiv.className = 'explanation correct';
+                explanationDiv.innerHTML = `<strong>¡Respuesta registrada!</strong><br><em>Respuesta modelo:</em> ${part3Questions[index].model}`;
+                score++;
+            } else {
+                explanationDiv.className = 'explanation incorrect';
+                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> Debes escribir una respuesta.`;
+            }
+            input.disabled = true;
+            input.nextElementSibling.disabled = true;
+            updateScore();
+        }
+
         function createReportedSpeech(containerId, sentences) {
             const container = document.getElementById(containerId);
             sentences.forEach((s, index) => {
@@ -206,7 +229,7 @@
 
         createMultipleChoice('part1-container', part1Questions);
         createMultipleChoice('part2-container', part2Questions);
-        createMultipleChoice('part3-container', part3Questions);
+        createPersonalQuestions('part3-container', part3Questions);
         createReportedSpeech('part4-container', part4Sentences);
     </script>
 </body>
