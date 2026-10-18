@@ -20,8 +20,8 @@
         input[type="text"] { width: 100%; padding: 10px; margin-top: 10px; border-radius: 4px; border: 1px solid #333; background: #2a2a2a; color: #ffffff; box-sizing: border-box; }
         button.check-btn { display: block; width: 100%; padding: 10px; background: #007bff; color: #ffffff; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
         button.check-btn:hover { background: #0056b3; }
-        .passage { background: #2a2a2a; padding: 15px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #007bff; }
-        #score-container { text-align: center; font-size: 1.5em; color: #ffffff; margin-top: 20px; font-weight: bold; }
+        .passage { background: #2a2a2a; padding: 15px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid #007bff; line-height: 1.8; }
+        #score-container { text-align: center; font-size: 1.8em; color: #ffffff; margin-top: 30px; font-weight: bold; padding: 15px; background: #007bff; border-radius: 8px; display: none; }
     </style>
 </head>
 <body>
@@ -34,7 +34,7 @@
         <h2>Parte 2: Comprensión Lectora</h2>
         <div class="passage">
             <p><strong>Read the passage below and decide if the statements are True, False, or Not Given.</strong></p>
-            <p>Online shopping has become a dominant force in retail over the last decade. Consumers appreciate the convenience of browsing and purchasing items from the comfort of their homes. However, this shift presents challenges for physical stores, which must adapt to changing consumer behaviors to survive.</p>
+            <p>Remote work and flexible schedules have transformed the modern workplace over the last decade. While many employees appreciate the autonomy and elimination of long daily commutes, some managers express concerns regarding team cohesion and spontaneous collaboration. Companies are currently experimenting with hybrid models, aiming to balance the benefits of working from home with the advantages of in-person interaction. Furthermore, studies suggest that productivity levels often remain stable or even increase when workers have greater control over their environments, although maintaining a healthy work-life boundary remains a significant challenge for many individuals.</p>
         </div>
         <div id="part2-container"></div>
 
@@ -74,12 +74,12 @@
         ];
 
         const part2Questions = [
-            { "question": "Online shopping has grown significantly in recent years.", "options": ["True", "False", "Not Given"], "answer": "True", "explanation": "The passage states that online shopping has become a dominant force in retail over the last decade." },
-            { "question": "Physical stores are now completely closed.", "options": ["True", "False", "Not Given"], "answer": "False", "explanation": "The passage mentions that physical stores must adapt to survive, not that they are closed." },
-            { "question": "The convenience of shopping from home is liked by many consumers.", "options": ["True", "False", "Not Given"], "answer": "True", "explanation": "The passage notes that consumers appreciate the convenience of browsing and purchasing items from home." },
-            { "question": "Online shopping is only popular among young people.", "options": ["True", "False", "Not Given"], "answer": "Not Given", "explanation": "The passage does not mention the age of consumers who shop online." },
-            { "question": "Online shopping is more popular than television.", "options": ["True", "False", "Not Given"], "answer": "Not Given", "explanation": "The passage does not mention television at all." },
-            { "question": "Most people prefer to buy clothes online.", "options": ["True", "False", "Not Given"], "answer": "Not Given", "explanation": "The passage does not mention what specific items people prefer to buy online." }
+            { "question": "Many employees view the elimination of long commutes as a benefit.", "options": ["True", "False", "Not Given"], "answer": "True", "explanation": "The passage states that many employees appreciate the elimination of long daily commutes." },
+            { "question": "Productivity levels consistently decrease with remote work.", "options": ["True", "False", "Not Given"], "answer": "False", "explanation": "The passage notes that productivity levels often remain stable or even increase." },
+            { "question": "Most major corporations have completely abandoned hybrid models in favor of traditional office setups.", "options": ["True", "False", "Not Given"], "answer": "Not Given", "explanation": "The passage mentions companies experimenting with hybrid models, but does not provide details on major corporations abandoning them." },
+            { "question": "Managers are universally enthusiastic about spontaneous collaboration in hybrid work environments.", "options": ["True", "False", "Not Given"], "answer": "False", "explanation": "The passage notes that some managers express concerns regarding team cohesion and spontaneous collaboration." },
+            { "question": "Balancing work and personal life is difficult for many remote employees.", "options": ["True", "False", "Not Given"], "answer": "True", "explanation": "The passage explicitly states that maintaining a healthy work-life boundary remains a significant challenge for many individuals." },
+            { "question": "The trend towards remote work is expected to reverse entirely by next year.", "options": ["True", "False", "Not Given"], "answer": "Not Given", "explanation": "The passage does not mention future expectations regarding the complete reversal of remote work." }
         ];
 
         const part3Questions = [
@@ -102,6 +102,7 @@
             answeredCount++;
             if (answeredCount === totalForScore) {
                 const scoreContainer = document.getElementById('score-container');
+                scoreContainer.style.display = 'block';
                 scoreContainer.innerHTML = `Tu puntaje final es: ${score} / ${totalForScore}`;
             }
         }
@@ -123,6 +124,7 @@
                             </li>
                         `).join('')}
                     </ul>
+                    <button class="check-btn" id="${containerId}-show-answer-${index}" onclick="showAnswer('${containerId}', ${index})" style="display:none;">Show the answer</button>
                     <div id="${containerId}-explanation-${index}" class="explanation"></div>
                 `;
                 container.appendChild(questionDiv);
@@ -133,27 +135,41 @@
                     const name = this.name;
                     if (!name.startsWith(containerId)) return;
                     const index = name.split('-')[2];
-                    const selectedOption = this.value;
-                    const explanationDiv = document.getElementById(`${containerId}-explanation-${index}`);
-                    explanationDiv.style.display = 'block';
-
-                    const currentQuestion = questions[index];
-
-                    if (selectedOption === currentQuestion.answer) {
-                        explanationDiv.className = 'explanation correct';
-                        explanationDiv.innerHTML = '<strong>¡Correcto!</strong>';
-                        score++;
-                    } else {
-                        explanationDiv.className = 'explanation incorrect';
-                        explanationDiv.innerHTML = `<strong>Incorrecto.</strong> ${currentQuestion.explanation}`;
-                    }
+                    const showAnswerBtn = document.getElementById(`${containerId}-show-answer-${index}`);
+                    showAnswerBtn.style.display = 'block';
 
                     document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
                         input.disabled = true;
                     });
-                    updateScore();
                 });
             });
+        }
+
+        function showAnswer(containerId, index) {
+            const name = `${containerId}-${index}`;
+            const selectedInput = document.querySelector(`input[name="${name}"]:checked`);
+            const explanationDiv = document.getElementById(`${containerId}-explanation-${index}`);
+            const showAnswerBtn = document.getElementById(`${containerId}-show-answer-${index}`);
+            
+            let questionsArray = [];
+            if (containerId === 'part1-container') questionsArray = part1Questions;
+            else if (containerId === 'part2-container') questionsArray = part2Questions;
+
+            const currentQuestion = questionsArray[index];
+            const selectedOption = selectedInput ? selectedInput.value : null;
+
+            explanationDiv.style.display = 'block';
+            showAnswerBtn.style.display = 'none';
+
+            if (selectedOption === currentQuestion.answer) {
+                explanationDiv.className = 'explanation correct';
+                explanationDiv.innerHTML = '<strong>¡Correcto!</strong>';
+                score++;
+            } else {
+                explanationDiv.className = 'explanation incorrect';
+                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> ${currentQuestion.explanation}`;
+            }
+            updateScore();
         }
 
         function createPersonalQuestions(containerId, questions) {
@@ -220,17 +236,4 @@
                 score++;
             } else {
                 explanationDiv.className = 'explanation incorrect';
-                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es:<br>${correctAnswer}<br><strong>Explicación:</strong> ${part4Sentences[index].explanation}`;
-            }
-            input.disabled = true;
-            input.nextElementSibling.disabled = true;
-            updateScore();
-        }
-
-        createMultipleChoice('part1-container', part1Questions);
-        createMultipleChoice('part2-container', part2Questions);
-        createPersonalQuestions('part3-container', part3Questions);
-        createReportedSpeech('part4-container', part4Sentences);
-    </script>
-</body>
-</html>
+                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es:<br>${correctAnswer}<br><stron
