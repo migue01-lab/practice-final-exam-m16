@@ -70,7 +70,7 @@
             { "question": "'I didn't steal the money,' he said.", "options": ["He denied stealing the money.", "He denied to steal the money.", "He denied that he steal the money."], "answer": "He denied stealing the money.", "explanation": "The reporting verb 'deny' is followed by the gerund form." },
             { "question": "'Why don't we go to the movies?' she suggested.", "options": ["She suggested going to the movies.", "She suggested to go to the movies.", "She suggested that we to go to the movies."], "answer": "She suggested going to the movies.", "explanation": "The reporting verb 'suggest' is followed by the gerund." },
             { "question": "'It is better to see the doctor,' he explained.", "options": ["He explained that it was better to see the doctor.", "He explained that it has been better to see the doctor.", "He explained that it is better to see the doctor."], "answer": "He explained that it was better to see the doctor.", "explanation": "The tense backshifts from 'is' to 'was' in reported speech." },
-            { "question": "'How did you feel?' she asked.", "options": ["She asked how I felt.", "She asked how did I feel.", "She asked how I had felt."], "answer": "She asked how I had felt.", "explanation": "The tense shifts back to the past perfect, and 'did' is omitted." }
+            { "question": "'How did you feel?' she asked.", "options": ["She asked how I felt.", "She asked how did I feel.", "She asked how I had felt."], "answer": "She asked how I had felt.", "explanation": "Reported questions follow a statement word order, shifting the tense back." }
         ];
 
         const part2Questions = [
@@ -236,4 +236,4 @@
                 score++;
             } else {
                 explanationDiv.className = 'explanation incorrect';
-                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es:<br>${correctAnswer}<br><stron
+                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es:<br>${correctAnswer}
