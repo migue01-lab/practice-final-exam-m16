@@ -46,6 +46,7 @@
 
         <div id="score-container"></div>
     </div>
+
     <script>
         let score = 0;
         const totalForScore = 35; 
@@ -236,4 +237,17 @@
                 score++;
             } else {
                 explanationDiv.className = 'explanation incorrect';
-                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es:<br>${correctAnswer}
+                explanationDiv.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta es:<br>${correctAnswer}<br><strong>Explicación:</strong> ${part4Sentences[index].explanation}`;
+            }
+            input.disabled = true;
+            input.nextElementSibling.disabled = true;
+            updateScore();
+        }
+
+        createMultipleChoice('part1-container', part1Questions);
+        createMultipleChoice('part2-container', part2Questions);
+        createPersonalQuestions('part3-container', part3Questions);
+        createReportedSpeech('part4-container', part4Sentences);
+    </script>
+</body>
+</html>
